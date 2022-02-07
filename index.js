@@ -226,6 +226,14 @@ const playGame = (lastWord = '') => {
                     space.classList.remove('active')
                 );
                 letterSpaces[nextNotGiven]?.classList.add('active');
+                if (
+                    currGuess.filter((letter) => letter).length === letterNum &&
+                    !gameOver
+                ) {
+                    guessBtn.classList.add('enabled');
+                } else {
+                    guessBtn.classList.remove('enabled');
+                }
                 break;
             default:
                 if (
@@ -248,15 +256,16 @@ const playGame = (lastWord = '') => {
                         letterSpaces[getLastNotGiven(given)].classList.add(
                             'active'
                         );
+                    if (
+                        currGuess.filter((letter) => letter).length ===
+                            letterNum &&
+                        !gameOver
+                    ) {
+                        guessBtn.classList.add('enabled');
+                    } else {
+                        guessBtn.classList.remove('enabled');
+                    }
                 }
-        }
-        if (
-            currGuess.filter((letter) => letter).length === letterNum &&
-            !gameOver
-        ) {
-            guessBtn.classList.add('enabled');
-        } else {
-            guessBtn.classList.remove('enabled');
         }
     };
 
