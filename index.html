@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="styles.css" />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        />
+        <script src="index.js"></script>
+        <title>WordAround - a new word game</title>
+    </head>
+    <body onload="load()">
+        <header>
+            <div id="info" class="material-icons btn">info</div>
+            <h1 id="title">WordAround</h1>
+            <div id="settings" class="material-icons btn">settings</div>
+        </header>
+        <info-content style="display: none">
+            <h3>Welcome to WordAround!</h3>
+            <p>
+                To play, just type some letters - they'll display in the circle.
+            </p>
+            <p>
+                Your goal is to guess the hidden word with as little information
+                as possible. The less letters you need to guess a word, the more
+                points you earn.
+            </p>
+            <p>
+                To start, 4 letters of the hidden word are given. Try to guess
+                the missing letter, then press GUESS (or enter on your keyboard)
+                to make a guess.
+            </p>
+            <p>
+                If you guessed correctly, you will earn points and a new word
+                will fill in. The only letters you will start with are those
+                shared between the old and new word.
+            </p>
+            <p>
+                If you guess incorrectly, another random letter will fill in,
+                giving you an opportunity to guess again.
+            </p>
+            <p>
+                If you still can't guess the word when there's only one letter
+                left, the game is over.
+            </p>
+        </info-content>
+        <settings-content style="display: none">
+            <div>
+                Dark Mode
+                <label class="switch">
+                    <input
+                        type="checkbox"
+                        id="dark-mode"
+                        oninput="toggleDarkMode(event)"
+                    />
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div>
+                6 Letters
+                <label class="switch">
+                    <input
+                        type="checkbox"
+                        id="letternum"
+                        oninput="toggleLetters(event)"
+                    />
+                    <span class="slider"></span>
+                </label>
+                7 Letters
+            </div>
+        </settings-content>
+        <game-content style="display: flex">
+            <p class="points-worth"></p>
+            <div class="word-container">
+                <div class="go-btn">
+                    <span class="guess-text">GUESS</span>
+                    <span style="font-size: 18px">[enter]</span>
+                </div>
+            </div>
+            <div id="no-guess" class="btn">No guess</div>
+            <div class="score-container">
+                <p class="score-label">Your score</p>
+                <strong id="score">0</strong>
+            </div>
+        </game-content>
+    </body>
+</html>
