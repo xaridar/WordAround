@@ -113,11 +113,18 @@ settings-content > * {
     padding-top: 20px;
     user-select: none;
     font-size: 32px;
+    pointer-events: none;
+}
+
+.letter > span {
+    pointer-events: auto;
+    width: 30px;
 }
 
 .letter-container.active {
     background-color: rgb(139, 126, 223);
 }
+
 .letter-container {
     position: absolute;
     top: 0;
@@ -179,6 +186,12 @@ settings-content > * {
     transform: translateX(26px);
 }
 
+.letter span:empty::before {
+    content: attr(data-last);
+    color: rgba(192, 24, 24, 0.3);
+    font-weight: bold;
+}
+
 .word-container {
     width: 400px;
     height: 400px;
@@ -209,5 +222,30 @@ settings-content > * {
     }
     100% {
         color: var(--color);
+    }
+}
+
+@media screen and (max-width: 500px) {
+    body {
+        width: 85%;
+        min-width: 300px;
+    }
+
+    header {
+        justify-content: space-between;
+    }
+
+    .go-btn {
+        width: 150px;
+        height: 150px;
+    }
+
+    .guess-text {
+        font-size: 40px;
+    }
+
+    .word-container {
+        width: 300px;
+        height: 300px;
     }
 }

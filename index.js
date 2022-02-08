@@ -47,6 +47,9 @@ const initializeUI = () => {
         }deg) skewY(${-90 + 360 / letterNum}deg)`;
         const letter = document.createElement('div');
         letter.className = 'letter';
+        const span = document.createElement('span');
+        span.setAttribute('data-last', '\u2007');
+        letter.appendChild(span);
         letterContainer.appendChild(letter);
         const btn = container.lastElementChild;
         container.removeChild(btn);
@@ -98,6 +101,13 @@ const randWord = (lastWord) => {
 };
 
 const playGame = (lastWord = '') => {
+    if (lastWord) {
+        letterSpaces.forEach((space, i) => {
+            space
+                .querySelector('.letter > span')
+                .setAttribute('data-last', lastWord[i]);
+        });
+    }
     acceptLetters = true;
     gameOver = false;
     const currGuess = Array.from(Array(letterNum).map((i) => ''));
@@ -110,7 +120,7 @@ const playGame = (lastWord = '') => {
 
     const word = randWord(lastWord);
     letterSpaces.forEach((space) => {
-        space.querySelector('.letter').textContent = '';
+        space.querySelector('.letter').querySelector('span').textContent = '';
         space.classList.remove('active');
         space.classList.remove('preset');
     });
@@ -129,8 +139,9 @@ const playGame = (lastWord = '') => {
     }
     given.forEach((i) => (currGuess[i] = word[i]));
     for (let i = 0; i < given.length; i++) {
-        letterSpaces[given[i]].querySelector('.letter').textContent =
-            word.charAt(given[i]);
+        letterSpaces[given[i]]
+            .querySelector('.letter')
+            .querySelector('span').textContent = word.charAt(given[i]);
         letterSpaces[given[i]].classList.add('preset');
     }
     pointsWorth.textContent = `This word is worth ${
@@ -220,7 +231,9 @@ const playGame = (lastWord = '') => {
                         nextNotGiven === undefined ? letterNum : nextNotGiven,
                         given
                     )
-                ].querySelector('.letter').textContent = '';
+                ]
+                    .querySelector('.letter')
+                    .querySelector('span').textContent = '';
                 nextNotGiven = getNextToFill(currGuess);
                 letterSpaces.forEach((space) =>
                     space.classList.remove('active')
@@ -243,9 +256,10 @@ const playGame = (lastWord = '') => {
                     nextNotGiven < letterNum
                 ) {
                     currGuess[nextNotGiven] = k.key.toLowerCase();
-                    letterSpaces[nextNotGiven].querySelector(
-                        '.letter'
-                    ).textContent = k.key.toLowerCase();
+                    letterSpaces[nextNotGiven]
+                        .querySelector('.letter')
+                        .querySelector('span').textContent =
+                        k.key.toLowerCase();
                     nextNotGiven = getNextToFill(currGuess);
                     if (nextNotGiven === -1) nextNotGiven = undefined;
                     letterSpaces.forEach((space) =>
@@ -294,7 +308,8 @@ const newLetter = (word, given, currGuess, nextNotGiven) => {
         guessBtn.classList.add('enabled');
         letterSpaces.forEach((space, i) => {
             space.classList.add('preset');
-            space.querySelector('.letter').textContent = word[i];
+            space.querySelector('.letter').querySelector('span').textContent =
+                word[i];
         });
         currGuess.length = 0;
         currGuess.push(...word.split(''));
@@ -310,15 +325,16 @@ const newLetter = (word, given, currGuess, nextNotGiven) => {
     const added = shuffledPool[0];
     given.push(added);
     currGuess[added] = word.charAt(added);
-    letterSpaces[added].querySelector('.letter').textContent =
-        word.charAt(added);
+    letterSpaces[added]
+        .querySelector('.letter')
+        .querySelector('span').textContent = word.charAt(added);
     letterSpaces[added].classList.add('preset');
     letterSpaces.forEach((space) => {
         space.classList.remove('active');
     });
     letterSpaces.forEach((letter, i) => {
         if (given.includes(i)) return;
-        letter.querySelector('.letter').textContent = '';
+        letter.querySelector('.letter').querySelector('span').textContent = '';
         currGuess[i] = '';
     });
     nextNotGiven = getNextToFill(currGuess);
