@@ -113,12 +113,26 @@ settings-content > * {
     padding-top: 20px;
     user-select: none;
     font-size: 32px;
+}
+
+.letter > input {
+    display: inline-flex;
+    justify-content: center;
+    width: 30px;
+    font-size: 20px;
+    background-color: transparent;
+    text-align: center;
+    border: none;
+    outline: none;
+    color: inherit;
+    caret-color: transparent;
+    user-select: none;
     pointer-events: none;
 }
 
-.letter > span {
-    pointer-events: auto;
-    width: 30px;
+.letter > input::placeholder {
+    color: rgba(192, 24, 24, 0.3);
+    font-weight: bold;
 }
 
 .letter-container.active {
@@ -184,12 +198,6 @@ settings-content > * {
 
 .switch input:checked + .slider::before {
     transform: translateX(26px);
-}
-
-.letter span:empty::before {
-    content: attr(data-last);
-    color: rgba(192, 24, 24, 0.3);
-    font-weight: bold;
 }
 
 .word-container {
