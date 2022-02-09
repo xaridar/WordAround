@@ -147,7 +147,6 @@ const playGame = (lastWord = '') => {
     const ret = moveStart(randWord(lastWord));
     wordStartPoint = ret.wordStartPoint;
     const { word } = ret;
-    console.log(word);
     availPoints = letterNum;
     given = [];
     nextNotGiven = getNextNotGiven(-1, given);
