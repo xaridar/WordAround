@@ -28,7 +28,8 @@ game-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
+    gap: 30px;
     position: relative;
 }
 
@@ -58,11 +59,12 @@ settings-content > * {
     gap: 20px;
 }
 
-#no-guess {
+#copy {
     padding: 10px 20px;
     background-color: slateblue;
     color: aliceblue;
     border-radius: 5px;
+    display: none;
 }
 
 #score {
@@ -116,10 +118,25 @@ settings-content > * {
     pointer-events: none;
 }
 
-.letter > span {
-    pointer-events: auto;
+.letter > input {
+    display: inline-flex;
+    justify-content: center;
     width: 30px;
+    font-size: inherit;
+    background-color: transparent;
+    text-align: center;
+    border: none;
+    outline: none;
+    color: inherit;
+    caret-color: transparent;
+    user-select: none;
+    pointer-events: none;
 }
+
+/* .letter > input::placeholder {
+    color: rgba(192, 24, 24, 0.3);
+    font-weight: bold;
+} */
 
 .letter-container.active {
     background-color: rgb(139, 126, 223);
@@ -140,9 +157,14 @@ settings-content > * {
     background-color: rgb(23, 50, 88);
 }
 
+.letter-container.first {
+    background-color: rgb(30, 38, 49);
+}
+
 .score-container {
     text-align: center;
     font-size: 18px;
+    margin-bottom: 30px;
 }
 
 .slider {
@@ -186,14 +208,9 @@ settings-content > * {
     transform: translateX(26px);
 }
 
-.letter span:empty::before {
-    content: attr(data-last);
-    color: rgba(192, 24, 24, 0.3);
-    font-weight: bold;
-}
-
 .word-container {
     width: 400px;
+    flex-shrink: 0;
     height: 400px;
     border-radius: 50%;
     overflow: hidden;

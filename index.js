@@ -1,11 +1,16 @@
 let wordList = [];
 let letterNum = 6;
 const startGiven = 4;
-let points = 0;
+let availPoints,
+    points = 0;
 let gameOver = true;
 let letterSpaces, guessBtn, pointsWorth, totalPoints;
 let acceptLetters = false;
 let rounds = 0;
+let given = [];
+let nextNotGiven = -1;
+
+let wordStartPoint = 0;
 
 const load = async () => {
     setDarkMode();
@@ -47,10 +52,20 @@ const initializeUI = () => {
         }deg) skewY(${-90 + 360 / letterNum}deg)`;
         const letter = document.createElement('div');
         letter.className = 'letter';
-        const span = document.createElement('span');
-        span.setAttribute('data-last', '\u2007');
-        letter.appendChild(span);
+        const input = document.createElement('input');
+        input.spellcheck = false;
+        input.maxLength = 1;
+        input.pattern = 'gamer';
+        input.addEventListener('keydown', (e) => {
+            e.preventDefault();
+        });
+        letter.appendChild(input);
         letterContainer.appendChild(letter);
+        letterContainer.addEventListener('click', () => {
+            if (!given.includes(i)) nextNotGiven = i;
+            letterSpaces.forEach((space) => space.classList.remove('active'));
+            letterContainer.classList.add('active');
+        });
         const btn = container.lastElementChild;
         container.removeChild(btn);
         container.appendChild(letterContainer);
@@ -100,17 +115,28 @@ const randWord = (lastWord) => {
         [Math.floor(Math.random() * wordList.length)].toLowerCase();
 };
 
-const playGame = (lastWord = '') => {
-    if (lastWord) {
-        letterSpaces.forEach((space, i) => {
-            space
-                .querySelector('.letter > span')
-                .setAttribute('data-last', lastWord[i]);
-        });
+const moveStart = (word) => {
+    const rand = Math.floor(Math.random() * word.length);
+    const retArr = [];
+    for (let i = 0; i < word.length; i++) {
+        retArr[i] = word[(rand + i) % word.length];
     }
+    return { word: retArr.join(''), wordStartPoint: word.length - rand };
+};
+
+const playGame = (lastWord = '') => {
+    // if (lastWord) {
+    //     letterSpaces.forEach((space, i) => {
+    //         space.querySelector('.letter > input').placeholder = lastWord[i];
+    //     });
+    // } else {
+    //     letterSpaces.forEach((space, i) => {
+    //         space.querySelector('.letter > input').placeholder = '\u2007';
+    //     });
+    // }
     acceptLetters = true;
     gameOver = false;
-    const currGuess = Array.from(Array(letterNum).map((i) => ''));
+    const currGuess = Array.from(Array(letterNum).map(() => ''));
     if (!lastWord) {
         points = 0;
         rounds = 0;
@@ -118,37 +144,42 @@ const playGame = (lastWord = '') => {
 
     rounds++;
 
-    const word = randWord(lastWord);
-    letterSpaces.forEach((space) => {
-        space.querySelector('.letter').querySelector('span').textContent = '';
+    const ret = moveStart(randWord(lastWord));
+    wordStartPoint = ret.wordStartPoint;
+    const { word } = ret;
+    console.log(word);
+    availPoints = letterNum;
+    given = [];
+    nextNotGiven = getNextNotGiven(-1, given);
+    letterSpaces.forEach((space, i) => {
+        space.querySelector('.letter').querySelector('input').value = '';
         space.classList.remove('active');
+        space.classList.remove('first');
         space.classList.remove('preset');
     });
 
-    const given = [];
-    if (lastWord === '') {
-        const shuffled = Array.from(Array(letterNum).keys())
-            .map((val) => ({ val, sort: Math.random() }))
-            .sort((a, b) => a.sort - b.sort)
-            .map(({ val }) => val);
-        given.push(...shuffled.slice(0, startGiven));
-    } else {
-        for (let i = 0; i < letterNum; i++) {
-            if (lastWord.charAt(i) === word.charAt(i)) given.push(i);
-        }
-    }
-    given.forEach((i) => (currGuess[i] = word[i]));
-    for (let i = 0; i < given.length; i++) {
-        letterSpaces[given[i]]
-            .querySelector('.letter')
-            .querySelector('span').textContent = word.charAt(given[i]);
-        letterSpaces[given[i]].classList.add('preset');
-    }
-    pointsWorth.textContent = `This word is worth ${
-        letterNum - given.length - 1
-    } point${letterNum - given.length - 1 !== 1 ? 's' : ''}.`;
+    // if (lastWord === '') {
+    //     const shuffled = Array.from(Array(letterNum).keys())
+    //         .map((val) => ({ val, sort: Math.random() }))
+    //         .sort((a, b) => a.sort - b.sort)
+    //         .map(({ val }) => val);
+    //     given.push(...shuffled.slice(0, startGiven));
+    // } else {
+    //     for (let i = 0; i < letterNum; i++) {
+    //         if (lastWord.charAt(i) === word.charAt(i)) given.push(i);
+    //     }
+    // }
+    // given.forEach((i) => (currGuess[i] = word[i]));
+    // for (let i = 0; i < given.length; i++) {
+    //     letterSpaces[given[i]]
+    //         .querySelector('.letter')
+    //         .querySelector('input').value = word.charAt(given[i]);
+    //     letterSpaces[given[i]].classList.add('preset');
+    // }
+    pointsWorth.textContent = `This word is worth ${availPoints} point${
+        availPoints !== 1 ? 's' : ''
+    }.`;
 
-    let nextNotGiven = getNextToFill(currGuess);
     letterSpaces[nextNotGiven].classList.add('active');
 
     const guessListener = () => {
@@ -158,16 +189,17 @@ const playGame = (lastWord = '') => {
                 guessBtn.classList.remove('enabled');
                 guessBtn.removeEventListener('click', guessListener);
                 document.body.removeEventListener('keydown', keyListener);
+                pointsWorth.style.display = 'block';
 
                 document
-                    .querySelector('#no-guess')
-                    .removeEventListener('click', noGuessListener);
-                document.querySelector('#no-guess').textContent = 'No Guess';
+                    .querySelector('#copy')
+                    .removeEventListener('click', copyListener);
+                document.querySelector('#copy').style.display = 'none';
                 playGame();
                 return;
             }
             if (currGuess.join('') === word) {
-                points += letterNum - given.length - 1;
+                points += availPoints;
                 totalPoints.style.animation = 'points-correct 1s';
                 totalPoints.textContent = points;
                 guessBtn.classList.remove('enabled');
@@ -175,13 +207,21 @@ const playGame = (lastWord = '') => {
                 document.body.removeEventListener('keydown', keyListener);
 
                 document
-                    .querySelector('#no-guess')
-                    .removeEventListener('click', noGuessListener);
+                    .querySelector('#copy')
+                    .removeEventListener('click', copyListener);
                 setTimeout(() => {
                     playGame(word);
                 }, 1000);
             } else {
-                totalPoints.style.animation = 'points-incorrect 1s';
+                if (
+                    currGuess.some((letter, i) => {
+                        return !given.includes(i) && word[i] === letter;
+                    })
+                ) {
+                    totalPoints.style.animation = 'points-correct 1s';
+                } else {
+                    totalPoints.style.animation = 'points-incorrect 1s';
+                }
                 guessBtn.classList.remove('enabled');
                 acceptLetters = false;
                 setTimeout(() => {
@@ -201,40 +241,40 @@ const playGame = (lastWord = '') => {
     guessBtn.addEventListener('click', guessListener);
 
     const keyListener = (k) => {
+        if (k.ctrlPressed) return;
         if (
             !acceptLetters &&
             'abcdefghijklmnopqrstuvwxyz'.includes(k.key.toLowerCase())
         )
             return;
         switch (k.key) {
+            case 'ArrowRight':
+                nextNotGiven = getNextNotGiven(nextNotGiven, given);
+                letterSpaces.forEach((space) =>
+                    space.classList.remove('active')
+                );
+                letterSpaces[nextNotGiven].classList.add('active');
+                break;
+            case 'ArrowLeft':
+                nextNotGiven = getNextNotGiven(nextNotGiven, given, true);
+                letterSpaces.forEach((space) =>
+                    space.classList.remove('active')
+                );
+                letterSpaces[nextNotGiven].classList.add('active');
+                break;
             case 'Enter':
                 if (guessBtn.classList.contains('enabled')) {
                     guessBtn.click();
                 }
                 return;
             case 'Backspace':
-                if (
-                    findLastNotGiven(
-                        nextNotGiven === undefined ? letterNum : nextNotGiven,
-                        given
-                    ) === -1
-                )
+                if (getNextNotGiven(nextNotGiven, given, true) === undefined)
                     return;
-                currGuess[
-                    findLastNotGiven(
-                        nextNotGiven === undefined ? letterNum : nextNotGiven,
-                        given
-                    )
-                ] = '';
-                letterSpaces[
-                    findLastNotGiven(
-                        nextNotGiven === undefined ? letterNum : nextNotGiven,
-                        given
-                    )
-                ]
+                currGuess[getNextNotGiven(nextNotGiven, given, true)] = '';
+                letterSpaces[getNextNotGiven(nextNotGiven, given, true)]
                     .querySelector('.letter')
-                    .querySelector('span').textContent = '';
-                nextNotGiven = getNextToFill(currGuess);
+                    .querySelector('input').value = '';
+                nextNotGiven = getNextNotGiven(nextNotGiven, given, true);
                 letterSpaces.forEach((space) =>
                     space.classList.remove('active')
                 );
@@ -250,26 +290,18 @@ const playGame = (lastWord = '') => {
                 break;
             default:
                 if (
-                    'abcdefghijklmnopqrstuvwxyz'.includes(
-                        k.key.toLowerCase()
-                    ) &&
-                    nextNotGiven < letterNum
+                    'abcdefghijklmnopqrstuvwxyz'.includes(k.key.toLowerCase())
                 ) {
                     currGuess[nextNotGiven] = k.key.toLowerCase();
                     letterSpaces[nextNotGiven]
                         .querySelector('.letter')
-                        .querySelector('span').textContent =
-                        k.key.toLowerCase();
-                    nextNotGiven = getNextToFill(currGuess);
+                        .querySelector('input').value = k.key.toLowerCase();
+                    nextNotGiven = getNextNotGiven(nextNotGiven, given);
                     if (nextNotGiven === -1) nextNotGiven = undefined;
                     letterSpaces.forEach((space) =>
                         space.classList.remove('active')
                     );
                     letterSpaces[nextNotGiven]?.classList.add('active');
-                    if (nextNotGiven === undefined)
-                        letterSpaces[getLastNotGiven(given)].classList.add(
-                            'active'
-                        );
                     if (
                         currGuess.filter((letter) => letter).length ===
                             letterNum &&
@@ -285,10 +317,8 @@ const playGame = (lastWord = '') => {
 
     document.body.addEventListener('keydown', keyListener);
 
-    const noGuessListener = () => {
-        if (!gameOver)
-            nextNotGiven = newLetter(word, given, currGuess, nextNotGiven);
-        else {
+    const copyListener = () => {
+        if (gameOver) {
             navigator.clipboard.writeText(
                 `WordAround\nRounds: ${rounds}\nPoints: ${points}`
             );
@@ -296,60 +326,93 @@ const playGame = (lastWord = '') => {
         }
     };
 
-    document
-        .querySelector('#no-guess')
-        .addEventListener('click', noGuessListener);
+    document.querySelector('#copy').addEventListener('click', copyListener);
 };
 
 const newLetter = (word, given, currGuess, nextNotGiven) => {
-    if (given.length + 1 >= letterNum) {
+    guessBtn.classList.remove('enabled');
+    // const shuffledPool = Array.from(Array(letterNum).keys())
+    //     .filter((i) => !given.includes(i))
+    //     .map((val) => ({ val, sort: Math.random() }))
+    //     .sort((a, b) => a.sort - b.sort)
+    //     .map(({ val }) => val);
+    // const added = shuffledPool[0];
+    // given.push(added);
+    const oldGiven = [...given];
+    const added = [
+        ...currGuess
+            .map((el, i) => ({ val: el, idx: i }))
+            .filter(
+                (el) => el.val === word[el.idx] && !oldGiven.includes(el.idx)
+            )
+            .map(({ idx }) => idx),
+    ];
+    if (!added.length) {
+        availPoints--;
+        const shuffledPool = Array.from(Array(letterNum).keys())
+            .filter((i) => !given.includes(i))
+            .map((val) => ({ val, sort: Math.random() }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(({ val }) => val);
+        added.push(shuffledPool[0]);
+    }
+    if (availPoints <= 0) {
+        pointsWorth.style.display = 'none';
         gameOver = true;
         guessBtn.querySelector('.guess-text').textContent = 'Play Again?';
         guessBtn.classList.add('enabled');
         letterSpaces.forEach((space, i) => {
             space.classList.add('preset');
-            space.querySelector('.letter').querySelector('span').textContent =
-                word[i];
+            if (i === wordStartPoint) space.classList.add('first');
+            space.querySelector('.letter > input').value = word[i];
         });
         currGuess.length = 0;
         currGuess.push(...word.split(''));
-        document.querySelector('#no-guess').textContent = 'Copy Results';
+        document.querySelector('#copy').style.display = 'block';
         return;
     }
-    guessBtn.classList.remove('enabled');
-    const shuffledPool = Array.from(Array(letterNum).keys())
-        .filter((i) => !given.includes(i))
-        .map((val) => ({ val, sort: Math.random() }))
-        .sort((a, b) => a.sort - b.sort)
-        .map(({ val }) => val);
-    const added = shuffledPool[0];
-    given.push(added);
-    currGuess[added] = word.charAt(added);
-    letterSpaces[added]
-        .querySelector('.letter')
-        .querySelector('span').textContent = word.charAt(added);
-    letterSpaces[added].classList.add('preset');
+    given.push(...added);
+    given.forEach((added) => {
+        currGuess[added] = word.charAt(added);
+        letterSpaces[added]
+            .querySelector('.letter')
+            .querySelector('input').value = word.charAt(added);
+        letterSpaces[added].classList.add('preset');
+    });
     letterSpaces.forEach((space) => {
         space.classList.remove('active');
     });
     letterSpaces.forEach((letter, i) => {
         if (given.includes(i)) return;
-        letter.querySelector('.letter').querySelector('span').textContent = '';
+        letter.querySelector('.letter > input').value = '';
         currGuess[i] = '';
     });
-    nextNotGiven = getNextToFill(currGuess);
+    nextNotGiven = !given.includes(nextNotGiven)
+        ? nextNotGiven
+        : getNextNotGiven(nextNotGiven, given);
     letterSpaces[nextNotGiven].classList.add('active');
-    pointsWorth.textContent = `This word is worth ${
-        letterNum - given.length - 1
-    } point${letterNum - given.length - 1 !== 1 ? 's' : ''}.`;
+    pointsWorth.textContent = `This word is worth ${availPoints} point${
+        availPoints !== 1 ? 's' : ''
+    }.`;
     return nextNotGiven;
 };
 
-const getNextToFill = (currGuess) => {
+const getNextNotGiven = (index, given, back = false) => {
+    if (given.length === letterNum) return undefined;
+    if (!back && index === letterNum - 1) {
+        return getNextNotGiven(-1, given);
+    }
+    if (back && index === 0) {
+        return getNextNotGiven(letterNum, given, true);
+    }
     const ret = Array.from(Array(letterNum).keys())
-        .filter((num) => !currGuess[num])
-        .sort((a, b) => a - b)[0];
-    return ret === undefined ? -1 : ret;
+        .filter(
+            (num) => !given.includes(num) && (back ? num < index : num > index)
+        )
+        .sort((a, b) => a - b);
+    return ret[back ? ret.length - 1 : 0] === undefined
+        ? getNextNotGiven(index + (back ? -1 : 1), given, back)
+        : ret[back ? ret.length - 1 : 0];
 };
 
 const getLastNotGiven = (given) => {

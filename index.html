@@ -24,28 +24,30 @@
                 To play, just type some letters - they'll display in the circle.
             </p>
             <p>
+                A word is hidden in the circle, starting at a
+                <span style="color: slateblue">random position</span> but always
+                going clockwise.
+            </p>
+            <p>
                 Your goal is to guess the hidden word with as little information
                 as possible. The less letters you need to guess a word, the more
                 points you earn.
             </p>
             <p>
-                To start, 4 letters of the hidden word are given. Try to guess
-                the missing letter, then press GUESS (or enter on your keyboard)
-                to make a guess.
+                To start, no letters of the hidden word are given. Guess a word,
+                then press GUESS (or enter on your keyboard) to make a guess.
             </p>
             <p>
                 If you guessed correctly, you will earn points and a new word
-                will fill in. The only letters you will start with are those
-                shared between the old and new word.
+                will fill in. Otherwise, every letter in the same position of
+                the word you guessed and the target word will stay filled in.
             </p>
             <p>
-                If you guess incorrectly, another random letter will fill in,
-                giving you an opportunity to guess again.
+                If you guess every letter incorrectly, the available points for
+                this word will go down by 1 and a random letter wil be filled
+                in.
             </p>
-            <p>
-                If you still can't guess the word when there's only one letter
-                left, the game is over.
-            </p>
+            <p>If you run out of points on a word, the game is over.</p>
         </info-content>
         <settings-content style="display: none">
             <div>
@@ -80,7 +82,7 @@
                     <span style="font-size: 18px">[enter]</span>
                 </div>
             </div>
-            <div id="no-guess" class="btn">No guess</div>
+            <div id="copy" class="btn">Copy Results</div>
             <div class="score-container">
                 <p class="score-label">Your score</p>
                 <strong id="score">0</strong>
