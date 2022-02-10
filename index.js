@@ -345,6 +345,38 @@ const newLetter = (word, given, currGuess, nextNotGiven) => {
     // const added = shuffledPool[0];
     // given.push(added);
     const oldGiven = [...given];
+    const oldGuess = [...currGuess];
+
+    // add to guesses
+    const container = document.createElement('div');
+    container.className = 'word-container small';
+    for (let i = 0; i < letterNum; i++) {
+        const letterContainer = document.createElement('div');
+        letterContainer.className = 'letter-container small';
+        if (word[i] === oldGuess[i]) letterContainer.classList.add('preset');
+        letterContainer.id = 'letter-' + i;
+        letterContainer.style.transform = `rotate(${
+            (360 * i) / letterNum
+        }deg) skewY(${-90 + 360 / letterNum}deg)`;
+        const letter = document.createElement('div');
+        letter.className = 'letter';
+        const input = document.createElement('input');
+        input.spellcheck = false;
+        input.maxLength = 1;
+        input.pattern = 'gamer';
+        letter.style.transform = `skewY(${90 - 360 / letterNum}deg) rotate(${
+            180 / letterNum
+        }deg)`;
+        input.value = oldGuess[i];
+        input.addEventListener('keydown', (e) => {
+            e.preventDefault();
+        });
+        letter.appendChild(input);
+        letterContainer.appendChild(letter);
+        container.appendChild(letterContainer);
+    }
+    guesses.appendChild(container);
+
     const added = [
         ...currGuess
             .map((el, i) => ({ val: el, idx: i }))
@@ -378,7 +410,6 @@ const newLetter = (word, given, currGuess, nextNotGiven) => {
         document.querySelector('#copy').style.display = 'block';
         return;
     }
-    const oldGuess = [...currGuess];
     given.push(...added);
     given.forEach((added) => {
         currGuess[added] = word.charAt(added);
@@ -402,36 +433,6 @@ const newLetter = (word, given, currGuess, nextNotGiven) => {
     pointsWorth.textContent = `This word is worth ${availPoints} point${
         availPoints !== 1 ? 's' : ''
     }.`;
-
-    // add to guesses
-    const container = document.createElement('div');
-    container.className = 'word-container small';
-    for (let i = 0; i < letterNum; i++) {
-        const letterContainer = document.createElement('div');
-        letterContainer.className = 'letter-container small';
-        if (word[i] === oldGuess[i]) letterContainer.classList.add('preset');
-        letterContainer.id = 'letter-' + i;
-        letterContainer.style.transform = `rotate(${
-            (360 * i) / letterNum
-        }deg) skewY(${-90 + 360 / letterNum}deg)`;
-        const letter = document.createElement('div');
-        letter.className = 'letter';
-        const input = document.createElement('input');
-        input.spellcheck = false;
-        input.maxLength = 1;
-        input.pattern = 'gamer';
-        letter.style.transform = `skewY(${90 - 360 / letterNum}deg) rotate(${
-            180 / letterNum
-        }deg)`;
-        input.value = oldGuess[i];
-        input.addEventListener('keydown', (e) => {
-            e.preventDefault();
-        });
-        letter.appendChild(input);
-        letterContainer.appendChild(letter);
-        container.appendChild(letterContainer);
-    }
-    guesses.appendChild(container);
 
     return nextNotGiven;
 };
