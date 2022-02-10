@@ -362,7 +362,7 @@ const newLetter = (word, given, currGuess, nextNotGiven) => {
             .map(({ val }) => val);
         added.push(shuffledPool[0]);
     }
-    if (availPoints <= 0) {
+    if (availPoints <= 0 || given.length === letterNum) {
         pointsWorth.style.display = 'none';
         gameOver = true;
         guessBtn.querySelector('.guess-text').textContent = 'Play Again?';
