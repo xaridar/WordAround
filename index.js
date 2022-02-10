@@ -13,6 +13,7 @@ let nextNotGiven = -1;
 let wordStartPoint = 0;
 
 const load = async () => {
+    console.log('Created by Elliot Topper https://www.github.com/xaridar');
     setDarkMode();
     setLetters();
     initializeUI();
@@ -394,7 +395,6 @@ const newLetter = (word, given, currGuess, nextNotGiven) => {
             .map(({ val }) => val);
         added.push(shuffledPool[0]);
     }
-    console.log(given.length);
     if (availPoints <= 0 || [...given, ...added].length === letterNum) {
         pointsWorth.style.display = 'none';
         gameOver = true;
