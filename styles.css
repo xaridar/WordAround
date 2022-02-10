@@ -67,6 +67,11 @@ settings-content > * {
     display: none;
 }
 
+#guesses {
+    display: flex;
+    gap: 25px;
+}
+
 #score {
     font-size: 48px;
 }
@@ -161,6 +166,15 @@ settings-content > * {
     background-color: rgb(30, 38, 49);
 }
 
+.letter-container.small {
+    border: none;
+}
+
+.letter-container.small > .letter {
+    font-size: 16px;
+    padding-top: 4px;
+}
+
 .score-container {
     text-align: center;
     font-size: 18px;
@@ -216,6 +230,11 @@ settings-content > * {
     overflow: hidden;
     position: relative;
     color: aliceblue;
+}
+
+.word-container.small {
+    width: 75px;
+    height: 75px;
 }
 
 @keyframes points-correct {
