@@ -319,11 +319,11 @@ const playGame = (lastWord = '') => {
             navigator.userAgent
         )
     ) {
-        document
-            .querySelector('#mobile-input > input')
-            .addEventListener('keypress', (ev) => {
-                document.write(JSON.stringify(ev));
-            });
+        // document
+        //     .querySelector('#mobile-input > input')
+        //     .addEventListener('keypress', (ev) => {
+        //         document.write(JSON.stringify(ev));
+        //     });
     } else {
         document.body.addEventListener('keydown', keyListener);
     }
