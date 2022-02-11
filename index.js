@@ -490,6 +490,7 @@ const mobileInput = (e) => {
             break;
         case 'insertCompositionText':
         case 'insertText':
+            alert(e.inputType);
             if ('abcdefghijklmnopqrstuvwxyz'.includes(e.data.toLowerCase())) {
                 currGuess[nextNotGiven] = e.data.toLowerCase();
                 if (letterSpaces[nextNotGiven].querySelector('.letter > input'))
