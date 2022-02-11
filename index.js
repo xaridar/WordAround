@@ -468,6 +468,7 @@ const mobileInput = (e) => {
     e.preventDefault();
     e.target.value =
         '\u200B' + (e.data?.charAt(e.data.length - 1).toLowerCase() || '');
+    const data = e.data?.charAt(e.data.length - 1).toLowerCase() || '';
     if (!acceptLetters) return;
     switch (e.inputType) {
         case 'deleteContentBackward':
@@ -491,12 +492,12 @@ const mobileInput = (e) => {
             break;
         case 'insertCompositionText':
         case 'insertText':
-            if ('abcdefghijklmnopqrstuvwxyz'.includes(e.data.toLowerCase())) {
-                currGuess[nextNotGiven] = e.data.toLowerCase();
+            if ('abcdefghijklmnopqrstuvwxyz'.includes(data)) {
+                currGuess[nextNotGiven] = data;
                 if (letterSpaces[nextNotGiven].querySelector('.letter > input'))
                     letterSpaces[nextNotGiven].querySelector(
                         '.letter > input'
-                    ).value = e.data.toLowerCase();
+                    ).value = data;
                 nextNotGiven = getNextNotGiven(nextNotGiven, given);
                 if (nextNotGiven === -1) nextNotGiven = undefined;
                 letterSpaces.forEach((space) =>
