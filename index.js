@@ -322,7 +322,7 @@ const playGame = (lastWord = '') => {
         document
             .querySelector('#mobile-input > input')
             .addEventListener('keydown', (ev) => {
-                console.log('down', { ev });
+                document.write('down', { ev });
             });
     } else {
         document.body.addEventListener('keydown', keyListener);
