@@ -308,6 +308,6 @@ settings-content > * {
 
 @media screen and (max-height: 600px) {
     game-content {
-        justify-content: center;
+        justify-content: flex-start;
     }
 }
