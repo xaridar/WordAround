@@ -466,6 +466,7 @@ const toggleLetters = (e) => {
 
 const mobileInput = (e) => {
     e.preventDefault();
+    alert(e.inputType);
     e.target.value = '\u200B' + (e.data?.toLowerCase() || '');
     if (!acceptLetters) return;
     switch (e.inputType) {
