@@ -228,7 +228,7 @@ const playGame = (lastWord = '') => {
     guessBtn.addEventListener('click', guessListener);
 
     const keyListener = (k) => {
-        document.writeln(k);
+        document.writeln(k.key);
         if (k.ctrlPressed) return;
         if (
             !acceptLetters &&
