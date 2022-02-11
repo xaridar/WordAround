@@ -464,21 +464,11 @@ const toggleLetters = (e) => {
     setLetters(false);
 };
 
-const mobileInput = (k) => {
-    k.preventDefault();
-    if ('abcdefghijklmnopqrstuvwxyz'.includes(k.key.toLowerCase())) {
-        k.target.value = k.key.toLowerCase();
-    } else {
-        k.target.value = '';
-    }
-    if (k.ctrlPressed) return;
-    if (
-        !acceptLetters &&
-        'abcdefghijklmnopqrstuvwxyz'.includes(k.key.toLowerCase())
-    )
-        return;
-    switch (k.key) {
-        case 'Backspace':
+const mobileInput = (e) => {
+    e.target.value = '\u200B' + (e.data?.toLowerCase() || '');
+    if (!acceptLetters) return;
+    switch (e.inputType) {
+        case 'deleteContentBackward':
             if (getNextNotGiven(nextNotGiven, given, true) === undefined)
                 return;
             currGuess[getNextNotGiven(nextNotGiven, given, true)] = '';
@@ -497,13 +487,13 @@ const mobileInput = (k) => {
                 guessBtn.classList.remove('enabled');
             }
             break;
-        default:
-            if ('abcdefghijklmnopqrstuvwxyz'.includes(k.key.toLowerCase())) {
-                currGuess[nextNotGiven] = k.key.toLowerCase();
+        case 'insertText':
+            if ('abcdefghijklmnopqrstuvwxyz'.includes(e.data.toLowerCase())) {
+                currGuess[nextNotGiven] = e.data.toLowerCase();
                 if (letterSpaces[nextNotGiven].querySelector('.letter > input'))
                     letterSpaces[nextNotGiven].querySelector(
                         '.letter > input'
-                    ).value = k.key.toLowerCase();
+                    ).value = e.data.toLowerCase();
                 nextNotGiven = getNextNotGiven(nextNotGiven, given);
                 if (nextNotGiven === -1) nextNotGiven = undefined;
                 letterSpaces.forEach((space) =>
