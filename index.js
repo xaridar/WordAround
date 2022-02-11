@@ -466,7 +466,8 @@ const toggleLetters = (e) => {
 
 const mobileInput = (e) => {
     e.preventDefault();
-    e.target.value = '\u200B' + (e.data?.charAt(0).toLowerCase() || '');
+    e.target.value =
+        '\u200B' + (e.data?.charAt(e.data.length - 1).toLowerCase() || '');
     if (!acceptLetters) return;
     switch (e.inputType) {
         case 'deleteContentBackward':
@@ -490,7 +491,6 @@ const mobileInput = (e) => {
             break;
         case 'insertCompositionText':
         case 'insertText':
-            alert(e.inputType);
             if ('abcdefghijklmnopqrstuvwxyz'.includes(e.data.toLowerCase())) {
                 currGuess[nextNotGiven] = e.data.toLowerCase();
                 if (letterSpaces[nextNotGiven].querySelector('.letter > input'))
