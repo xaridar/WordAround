@@ -305,3 +305,9 @@ settings-content > * {
         height: 300px;
     }
 }
+
+@media screen and (max-height: 600px) {
+    game-content {
+        justify-content: center;
+    }
+}

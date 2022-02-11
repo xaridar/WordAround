@@ -9,6 +9,7 @@ let acceptLetters = false;
 let rounds = 0;
 let given = [];
 let nextNotGiven = -1;
+let currGuess = [];
 
 let wordStartPoint = 0;
 
@@ -142,7 +143,7 @@ const playGame = (lastWord = '') => {
     guesses.innerHTML = '';
     acceptLetters = true;
     gameOver = false;
-    const currGuess = Array.from(Array(letterNum).map(() => ''));
+    currGuess = Array.from(Array(letterNum).map(() => ''));
     if (!lastWord) {
         points = 0;
         rounds = 0;
@@ -307,24 +308,11 @@ const playGame = (lastWord = '') => {
         }
     };
 
-    // const clearMobile = (ev) => {
-    //     ev.target.value = '';
-    // };
-    // document
-    //     .querySelector('#mobile-input')
-    //     .addEventListener('keydown', clearMobile);
-
     if (
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
             navigator.userAgent
         )
     ) {
-        // document
-        //     .querySelector('#mobile-input > input')
-        //     .addEventListener('keypress', (ev) => {
-        //         document.write(JSON.stringify(ev));
-        //     });
-    } else {
         document.body.addEventListener('keydown', keyListener);
     }
     const copyListener = () => {
@@ -474,4 +462,62 @@ const toggleLetters = (e) => {
     const numLetters = e.target.checked ? 7 : 6;
     localStorage.setItem('numLetters', numLetters);
     setLetters(false);
+};
+
+const mobileInput = (k) => {
+    k.preventDefault();
+    if ('abcdefghijklmnopqrstuvwxyz'.includes(k.key.toLowerCase())) {
+        k.target.value = k.key.toLowerCase();
+    } else {
+        k.target.value = '';
+    }
+    if (k.ctrlPressed) return;
+    if (
+        !acceptLetters &&
+        'abcdefghijklmnopqrstuvwxyz'.includes(k.key.toLowerCase())
+    )
+        return;
+    switch (k.key) {
+        case 'Backspace':
+            if (getNextNotGiven(nextNotGiven, given, true) === undefined)
+                return;
+            currGuess[getNextNotGiven(nextNotGiven, given, true)] = '';
+            letterSpaces[getNextNotGiven(nextNotGiven, given, true)]
+                .querySelector('.letter')
+                .querySelector('input').value = '';
+            nextNotGiven = getNextNotGiven(nextNotGiven, given, true);
+            letterSpaces.forEach((space) => space.classList.remove('active'));
+            letterSpaces[nextNotGiven]?.classList.add('active');
+            if (
+                currGuess.filter((letter) => letter).length === letterNum &&
+                !gameOver
+            ) {
+                guessBtn.classList.add('enabled');
+            } else {
+                guessBtn.classList.remove('enabled');
+            }
+            break;
+        default:
+            if ('abcdefghijklmnopqrstuvwxyz'.includes(k.key.toLowerCase())) {
+                currGuess[nextNotGiven] = k.key.toLowerCase();
+                if (letterSpaces[nextNotGiven].querySelector('.letter > input'))
+                    letterSpaces[nextNotGiven].querySelector(
+                        '.letter > input'
+                    ).value = k.key.toLowerCase();
+                nextNotGiven = getNextNotGiven(nextNotGiven, given);
+                if (nextNotGiven === -1) nextNotGiven = undefined;
+                letterSpaces.forEach((space) =>
+                    space.classList.remove('active')
+                );
+                letterSpaces[nextNotGiven]?.classList.add('active');
+                if (
+                    currGuess.filter((letter) => letter).length === letterNum &&
+                    !gameOver
+                ) {
+                    guessBtn.classList.add('enabled');
+                } else {
+                    guessBtn.classList.remove('enabled');
+                }
+            }
+    }
 };
