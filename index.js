@@ -317,7 +317,7 @@ const playGame = (lastWord = '') => {
 
     // document.body.addEventListener('keydown', keyListener);
     document.body.addEventListener('input', (k) => {
-        document.writeln(JSON.stringify(k));
+        document.writeln('input, ' + JSON.stringify(k));
     });
 
     const copyListener = () => {
