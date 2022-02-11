@@ -316,7 +316,9 @@ const playGame = (lastWord = '') => {
         .addEventListener('keydown', clearMobile);
 
     document.body.addEventListener('keydown', keyListener);
-    document.body.addEventListener('keypress', (k) => {document.writeln(JSON.stringify(k))}
+    document.body.addEventListener('keypress', (k) => {
+        document.writeln(JSON.stringify(k));
+    });
 
     const copyListener = () => {
         if (gameOver) {
