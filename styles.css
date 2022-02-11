@@ -97,9 +97,6 @@ settings-content > * {
     font-size: medium;
 }
 
-#mobile-input::before {
-}
-
 #score {
     font-size: 48px;
 }
