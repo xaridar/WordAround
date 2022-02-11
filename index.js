@@ -321,8 +321,8 @@ const playGame = (lastWord = '') => {
     ) {
         document
             .querySelector('#mobile-input > input')
-            .addEventListener('keydown', (ev) => {
-                document.write('down', { ev });
+            .addEventListener('keypress', (ev) => {
+                document.write(JSON.stringify(ev));
             });
     } else {
         document.body.addEventListener('keydown', keyListener);
