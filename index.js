@@ -466,7 +466,7 @@ const toggleLetters = (e) => {
 
 const mobileInput = (e) => {
     e.preventDefault();
-    e.target.value = '\u200B' + (e.data?.toLowerCase() || '');
+    e.target.value = '\u200B' + (e.data?.charAt(0).toLowerCase() || '');
     if (!acceptLetters) return;
     switch (e.inputType) {
         case 'deleteContentBackward':
