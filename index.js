@@ -466,7 +466,6 @@ const toggleLetters = (e) => {
 
 const mobileInput = (e) => {
     e.preventDefault();
-    alert(e.inputType);
     e.target.value = '\u200B' + (e.data?.toLowerCase() || '');
     if (!acceptLetters) return;
     switch (e.inputType) {
@@ -489,6 +488,7 @@ const mobileInput = (e) => {
                 guessBtn.classList.remove('enabled');
             }
             break;
+        case 'insertCompositionText':
         case 'insertText':
             alert(e.data);
             if ('abcdefghijklmnopqrstuvwxyz'.includes(e.data.toLowerCase())) {
