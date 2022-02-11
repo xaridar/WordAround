@@ -307,12 +307,12 @@ const playGame = (lastWord = '') => {
         }
     };
 
-    const clearMobile = (ev) => {
-        ev.target.value = '';
-    };
-    document
-        .querySelector('#mobile-input')
-        .addEventListener('keydown', clearMobile);
+    // const clearMobile = (ev) => {
+    //     ev.target.value = '';
+    // };
+    // document
+    //     .querySelector('#mobile-input')
+    //     .addEventListener('keydown', clearMobile);
 
     if (
         /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
