@@ -372,12 +372,14 @@ const newLetter = (word, given, currGuess, nextNotGiven) => {
     ];
     if (!added.length) {
         availPoints--;
-        const shuffledPool = Array.from(Array(letterNum).keys())
-            .filter((i) => !given.includes(i))
-            .map((val) => ({ val, sort: Math.random() }))
-            .sort((a, b) => a.sort - b.sort)
-            .map(({ val }) => val);
-        added.push(shuffledPool[0]);
+        if (given.length < word.length - 1 || availPoints <= 0) {
+            const shuffledPool = Array.from(Array(letterNum).keys())
+                .filter((i) => !given.includes(i))
+                .map((val) => ({ val, sort: Math.random() }))
+                .sort((a, b) => a.sort - b.sort)
+                .map(({ val }) => val);
+            added.push(shuffledPool[0]);
+        }
     }
     if (availPoints <= 0 || [...given, ...added].length === letterNum) {
         pointsWorth.style.display = 'none';
