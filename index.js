@@ -315,11 +315,19 @@ const playGame = (lastWord = '') => {
         .querySelector('#mobile-input')
         .addEventListener('keydown', clearMobile);
 
-    // document.body.addEventListener('keydown', keyListener);
-    document.body.addEventListener('input', (k) => {
-        document.writeln(JSON.stringify(k.keyCode));
-    });
-
+    if (
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent
+        )
+    ) {
+        document
+            .querySelector('#mobile-input > input')
+            .addEventListener('change', (ev) => {
+                document.writeln(ev.target.value);
+            });
+    } else {
+        document.body.addEventListener('keydown', keyListener);
+    }
     const copyListener = () => {
         if (gameOver) {
             navigator.clipboard.writeText(
