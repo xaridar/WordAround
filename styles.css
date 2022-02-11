@@ -32,11 +32,11 @@ game-content {
 }
 
 game-content > *:not(:last-child):not(:empty) {
-    margin-bottom: 5%;
+    margin-bottom: max(5px, 2vh);
 }
 
 game-content > *:not(:first-child):not(:empty) {
-    margin-top: 5%;
+    margin-top: max(5px, 2vh);
 }
 
 header {
