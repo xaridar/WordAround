@@ -14,6 +14,18 @@ let wordStartPoint = 0;
 
 const load = async () => {
     console.log('Created by Elliot Topper https://www.github.com/xaridar');
+    if (
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent
+        )
+    ) {
+        document.querySelector('#mobile-input').style.display = 'block';
+
+        document.querySelector('#mobile-input > input').focus();
+        document.body.addEventListener('click', () => {
+            document.querySelector('#mobile-input > input').focus();
+        });
+    }
     setDarkMode();
     setLetters();
     initializeUI();
@@ -57,7 +69,7 @@ const initializeUI = () => {
         const input = document.createElement('input');
         input.spellcheck = false;
         input.maxLength = 1;
-        input.pattern = 'gamer';
+        input.disabled = true;
         input.addEventListener('keydown', (e) => {
             e.preventDefault();
         });
@@ -127,15 +139,6 @@ const moveStart = (word) => {
 };
 
 const playGame = (lastWord = '') => {
-    // if (lastWord) {
-    //     letterSpaces.forEach((space, i) => {
-    //         space.querySelector('.letter > input').placeholder = lastWord[i];
-    //     });
-    // } else {
-    //     letterSpaces.forEach((space, i) => {
-    //         space.querySelector('.letter > input').placeholder = '\u2007';
-    //     });
-    // }
     guesses.innerHTML = '';
     acceptLetters = true;
     gameOver = false;
@@ -160,24 +163,6 @@ const playGame = (lastWord = '') => {
         space.classList.remove('preset');
     });
 
-    // if (lastWord === '') {
-    //     const shuffled = Array.from(Array(letterNum).keys())
-    //         .map((val) => ({ val, sort: Math.random() }))
-    //         .sort((a, b) => a.sort - b.sort)
-    //         .map(({ val }) => val);
-    //     given.push(...shuffled.slice(0, startGiven));
-    // } else {
-    //     for (let i = 0; i < letterNum; i++) {
-    //         if (lastWord.charAt(i) === word.charAt(i)) given.push(i);
-    //     }
-    // }
-    // given.forEach((i) => (currGuess[i] = word[i]));
-    // for (let i = 0; i < given.length; i++) {
-    //     letterSpaces[given[i]]
-    //         .querySelector('.letter')
-    //         .querySelector('input').value = word.charAt(given[i]);
-    //     letterSpaces[given[i]].classList.add('preset');
-    // }
     pointsWorth.textContent = `This word is worth ${availPoints} point${
         availPoints !== 1 ? 's' : ''
     }.`;
@@ -322,6 +307,13 @@ const playGame = (lastWord = '') => {
         }
     };
 
+    const clearMobile = (ev) => {
+        ev.target.value = '';
+    };
+    document
+        .querySelector('#mobile-input')
+        .addEventListener('keydown', clearMobile);
+
     document.body.addEventListener('keydown', keyListener);
 
     const copyListener = () => {
@@ -338,13 +330,6 @@ const playGame = (lastWord = '') => {
 
 const newLetter = (word, given, currGuess, nextNotGiven) => {
     guessBtn.classList.remove('enabled');
-    // const shuffledPool = Array.from(Array(letterNum).keys())
-    //     .filter((i) => !given.includes(i))
-    //     .map((val) => ({ val, sort: Math.random() }))
-    //     .sort((a, b) => a.sort - b.sort)
-    //     .map(({ val }) => val);
-    // const added = shuffledPool[0];
-    // given.push(added);
     const oldGiven = [...given];
     const oldGuess = [...currGuess];
 
