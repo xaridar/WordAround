@@ -228,7 +228,6 @@ const playGame = (lastWord = '') => {
     guessBtn.addEventListener('click', guessListener);
 
     const keyListener = (k) => {
-        document.writeln(JSON.stringify(k));
         if (k.ctrlPressed) return;
         if (
             !acceptLetters &&
@@ -323,7 +322,7 @@ const playGame = (lastWord = '') => {
         document
             .querySelector('#mobile-input > input')
             .addEventListener('keydown', (ev) => {
-                document.writeln(ev.target.value.charAt(0).charCodeAt());
+                document.writeln(ev.target.value.charAt(0));
             });
     } else {
         document.body.addEventListener('keydown', keyListener);
