@@ -4,7 +4,8 @@
     "description": "A vocabulary and word guessing game with a circular twist",
     "main": "server.js",
     "scripts": {
-        "start": "nodemon .",
+        "start": "node .",
+        "dev": "nodemon .",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Elliot Topper",
