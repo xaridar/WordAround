@@ -26,6 +26,12 @@
             "src": "wordaround512.png",
             "sizes": "512x512",
             "type": "image/png"
+        },
+        {
+            "src": "wordaround-maskable.png",
+            "type": "image/png",
+            "sizes": "192x192",
+            "purpose": "maskable"
         }
     ],
     "background_color": "#0b0b42",

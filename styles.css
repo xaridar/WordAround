@@ -159,19 +159,17 @@ settings-content > * {
     pointer-events: none;
 }
 
-.letter > input {
+.letter > p {
     display: inline-flex;
     justify-content: center;
     width: 30px;
     font-size: inherit;
     background-color: transparent;
     text-align: center;
-    border: none;
-    outline: none;
     color: inherit;
-    caret-color: transparent;
     user-select: none;
     pointer-events: none;
+    margin: 0;
 }
 
 .letter-container.active {

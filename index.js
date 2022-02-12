@@ -68,14 +68,8 @@ const initializeUI = () => {
         }deg) skewY(${-90 + 360 / letterNum}deg)`;
         const letter = document.createElement('div');
         letter.className = 'letter';
-        const input = document.createElement('input');
-        input.spellcheck = false;
-        input.maxLength = 1;
-        input.disabled = true;
-        input.addEventListener('keydown', (e) => {
-            e.preventDefault();
-        });
-        letter.appendChild(input);
+        const p = document.createElement('p');
+        letter.appendChild(p);
         letterContainer.appendChild(letter);
         letterContainer.addEventListener('click', () => {
             if (!given.includes(i)) nextNotGiven = i;
@@ -166,7 +160,7 @@ const playGame = (lastWord = '') => {
     );
     nextNotGiven = getNextNotGiven(-1, given);
     letterSpaces.forEach((space, i) => {
-        space.querySelector('.letter').querySelector('input').value =
+        space.querySelector('.letter').querySelector('p').textContent =
             given.includes(i) ? word[i] : '';
         space.classList.remove('active');
         space.classList.remove('first');
@@ -274,7 +268,7 @@ const playGame = (lastWord = '') => {
                 currGuess[getNextNotGiven(nextNotGiven, given, true)] = '';
                 letterSpaces[getNextNotGiven(nextNotGiven, given, true)]
                     .querySelector('.letter')
-                    .querySelector('input').value = '';
+                    .querySelector('p').textContent = '';
                 nextNotGiven = getNextNotGiven(nextNotGiven, given, true);
                 letterSpaces.forEach((space) =>
                     space.classList.remove('active')
@@ -294,14 +288,10 @@ const playGame = (lastWord = '') => {
                     'abcdefghijklmnopqrstuvwxyz'.includes(k.key.toLowerCase())
                 ) {
                     currGuess[nextNotGiven] = k.key.toLowerCase();
-                    if (
+                    if (letterSpaces[nextNotGiven].querySelector('.letter > p'))
                         letterSpaces[nextNotGiven].querySelector(
-                            '.letter > input'
-                        )
-                    )
-                        letterSpaces[nextNotGiven].querySelector(
-                            '.letter > input'
-                        ).value = k.key.toLowerCase();
+                            '.letter > p'
+                        ).textContent = k.key.toLowerCase();
                     nextNotGiven = getNextNotGiven(nextNotGiven, given);
                     if (nextNotGiven === -1) nextNotGiven = undefined;
                     letterSpaces.forEach((space) =>
@@ -397,18 +387,12 @@ const newLetter = (word, given, currGuess, nextNotGiven, wrongPos) => {
         }deg) skewY(${-90 + 360 / letterNum}deg)`;
         const letter = document.createElement('div');
         letter.className = 'letter';
-        const input = document.createElement('input');
-        input.spellcheck = false;
-        input.maxLength = 1;
-        input.pattern = 'gamer';
+        const p = document.createElement('p');
         letter.style.transform = `skewY(${90 - 360 / letterNum}deg) rotate(${
             180 / letterNum
         }deg)`;
-        input.value = oldGuess[i];
-        input.addEventListener('keydown', (e) => {
-            e.preventDefault();
-        });
-        letter.appendChild(input);
+        p.textContent = oldGuess[i];
+        letter.appendChild(p);
         letterContainer.appendChild(letter);
         container.appendChild(letterContainer);
     }
@@ -422,7 +406,7 @@ const newLetter = (word, given, currGuess, nextNotGiven, wrongPos) => {
         letterSpaces.forEach((space, i) => {
             space.classList.add('preset');
             if (i === wordStartPoint) space.classList.add('first');
-            space.querySelector('.letter > input').value = word[i];
+            space.querySelector('.letter > p').textContent = word[i];
         });
         currGuess.length = 0;
         currGuess.push(...word.split(''));
@@ -434,7 +418,7 @@ const newLetter = (word, given, currGuess, nextNotGiven, wrongPos) => {
         currGuess[added] = word.charAt(added);
         letterSpaces[added]
             .querySelector('.letter')
-            .querySelector('input').value = word.charAt(added);
+            .querySelector('p').textContent = word.charAt(added);
         letterSpaces[added].classList.add('preset');
     });
     letterSpaces.forEach((space) => {
@@ -442,7 +426,7 @@ const newLetter = (word, given, currGuess, nextNotGiven, wrongPos) => {
     });
     letterSpaces.forEach((letter, i) => {
         if (given.includes(i)) return;
-        letter.querySelector('.letter > input').value = '';
+        letter.querySelector('.letter > p').textContent = '';
         currGuess[i] = '';
     });
     nextNotGiven = !given.includes(nextNotGiven)
@@ -512,7 +496,7 @@ const mobileInput = (e) => {
             currGuess[getNextNotGiven(nextNotGiven, given, true)] = '';
             letterSpaces[getNextNotGiven(nextNotGiven, given, true)]
                 .querySelector('.letter')
-                .querySelector('input').value = '';
+                .querySelector('p').textContent = '';
             nextNotGiven = getNextNotGiven(nextNotGiven, given, true);
             letterSpaces.forEach((space) => space.classList.remove('active'));
             letterSpaces[nextNotGiven]?.classList.add('active');
@@ -529,10 +513,10 @@ const mobileInput = (e) => {
         case 'insertText':
             if ('abcdefghijklmnopqrstuvwxyz'.includes(data)) {
                 currGuess[nextNotGiven] = data;
-                if (letterSpaces[nextNotGiven].querySelector('.letter > input'))
+                if (letterSpaces[nextNotGiven].querySelector('.letter > p'))
                     letterSpaces[nextNotGiven].querySelector(
-                        '.letter > input'
-                    ).value = data;
+                        '.letter > p'
+                    ).textContent = data;
                 nextNotGiven = getNextNotGiven(nextNotGiven, given);
                 if (nextNotGiven === -1) nextNotGiven = undefined;
                 letterSpaces.forEach((space) =>
