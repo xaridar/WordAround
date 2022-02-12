@@ -278,7 +278,7 @@ settings-content > * {
         color: green;
     }
     100% {
-        color: var(--color);
+        color: initial;
     }
 }
 
@@ -290,7 +290,7 @@ settings-content > * {
         color: red;
     }
     100% {
-        color: var(--color);
+        color: initial;
     }
 }
 
