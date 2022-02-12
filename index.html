@@ -8,12 +8,19 @@
         <link rel="stylesheet" href="styles.css" />
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
         <link rel="icon" href="favicon.ico" type="image/x-icon" />
+        
+        <link rel="manifest" href="manifest.webmanifest" />
         <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
         />
+        <script>
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js');
+            }
+        </script>
         <script src="index.js"></script>
-        <title>WordAround - a new word game</title>
+        <title>WordAround - a circular word game</title>
     </head>
     <body onload="load()">
         <header>
@@ -43,12 +50,13 @@
             <p>
                 If you guessed correctly, you will earn points and a new word
                 will fill in. Otherwise, every letter in the same position of
-                the word you guessed and the target word will stay filled in.
+                the word you guessed and the target word will stay filled in. 
+                Every correct letter placed in the incorrect position on the circle will be marked in
+                <span style="color: rgb(0, 139, 141);">teal</span> on the circle below.
             </p>
             <p>
                 If you guess every letter incorrectly, the available points for
-                this word will go down by 1 and a random letter wil be filled
-                in.
+                this word will go down by 1.
             </p>
             <p>If you run out of points on a word, the game is over.</p>
         </info-content>

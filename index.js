@@ -7,7 +7,8 @@ let gameOver = true;
 let letterSpaces, guessBtn, pointsWorth, totalPoints, guesses;
 let acceptLetters = false;
 let rounds = 0;
-let given = [];
+let given = [],
+    wrongPos = [];
 let nextNotGiven = -1;
 let currGuess = [];
 
@@ -143,7 +144,6 @@ const playGame = (lastWord = '') => {
     guesses.innerHTML = '';
     acceptLetters = true;
     gameOver = false;
-    currGuess = Array.from(Array(letterNum).map(() => ''));
     if (!lastWord) {
         points = 0;
         rounds = 0;
@@ -155,13 +155,25 @@ const playGame = (lastWord = '') => {
     wordStartPoint = ret.wordStartPoint;
     const { word } = ret;
     availPoints = letterNum;
-    given = [];
+    const shuffled = Array.from(Array(letterNum).keys())
+        .map((val) => ({ val, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ val }) => val);
+    given = [...shuffled.slice(0, 3)];
+    wrongPos = [];
+    currGuess = Array.from(Array(letterNum).keys()).map((i) =>
+        given.includes(i) ? word[i] : ''
+    );
     nextNotGiven = getNextNotGiven(-1, given);
     letterSpaces.forEach((space, i) => {
-        space.querySelector('.letter').querySelector('input').value = '';
+        space.querySelector('.letter').querySelector('input').value =
+            given.includes(i) ? word[i] : '';
         space.classList.remove('active');
         space.classList.remove('first');
         space.classList.remove('preset');
+        if (given.includes(i)) {
+            space.classList.add('preset');
+        }
     });
 
     pointsWorth.textContent = `This word is worth ${availPoints} point${
@@ -218,7 +230,8 @@ const playGame = (lastWord = '') => {
                         word,
                         given,
                         currGuess,
-                        nextNotGiven
+                        nextNotGiven,
+                        wrongPos
                     );
                     acceptLetters = true;
                 }, 1000);
@@ -327,10 +340,48 @@ const playGame = (lastWord = '') => {
     document.querySelector('#copy').addEventListener('click', copyListener);
 };
 
-const newLetter = (word, given, currGuess, nextNotGiven) => {
+const newLetter = (word, given, currGuess, nextNotGiven, wrongPos) => {
     guessBtn.classList.remove('enabled');
     const oldGiven = [...given];
     const oldGuess = [...currGuess];
+
+    const added = [
+        ...currGuess
+            .map((el, i) => ({ val: el, idx: i }))
+            .filter(
+                (el) => el.val === word[el.idx] && !oldGiven.includes(el.idx)
+            )
+            .map(({ idx }) => idx),
+    ];
+    if (!added.length) {
+        availPoints--;
+        //     if (given.length < word.length - 1 || availPoints <= 0) {
+        //         const shuffledPool = Array.from(Array(letterNum).keys())
+        //             .filter((i) => !given.includes(i))
+        //             .map((val) => ({ val, sort: Math.random() }))
+        //             .sort((a, b) => a.sort - b.sort)
+        //             .map(({ val }) => val);
+        //         added.push(shuffledPool[0]);
+        //     }
+    }
+    let wordCopy = word.slice();
+    wrongPos = [
+        ...currGuess
+            .map((el, i) => ({ val: el, idx: i }))
+            .filter((el) => {
+                console.log(el.val);
+                const includes = wordCopy.includes(el.val);
+                wordCopy = wordCopy.replace(el.val, '');
+                return (
+                    includes &&
+                    !given.includes(el.idx) &&
+                    !added.includes(el.idx)
+                );
+            })
+            .map(({ idx }) => {
+                return idx;
+            }),
+    ];
 
     // add to guesses
     const container = document.createElement('div');
@@ -339,6 +390,7 @@ const newLetter = (word, given, currGuess, nextNotGiven) => {
         const letterContainer = document.createElement('div');
         letterContainer.className = 'letter-container small';
         if (word[i] === oldGuess[i]) letterContainer.classList.add('preset');
+        else if (wrongPos.includes(i)) letterContainer.classList.add('partial');
         letterContainer.id = 'letter-' + i;
         letterContainer.style.transform = `rotate(${
             (360 * i) / letterNum
@@ -362,25 +414,6 @@ const newLetter = (word, given, currGuess, nextNotGiven) => {
     }
     guesses.appendChild(container);
 
-    const added = [
-        ...currGuess
-            .map((el, i) => ({ val: el, idx: i }))
-            .filter(
-                (el) => el.val === word[el.idx] && !oldGiven.includes(el.idx)
-            )
-            .map(({ idx }) => idx),
-    ];
-    if (!added.length) {
-        availPoints--;
-        if (given.length < word.length - 1 || availPoints <= 0) {
-            const shuffledPool = Array.from(Array(letterNum).keys())
-                .filter((i) => !given.includes(i))
-                .map((val) => ({ val, sort: Math.random() }))
-                .sort((a, b) => a.sort - b.sort)
-                .map(({ val }) => val);
-            added.push(shuffledPool[0]);
-        }
-    }
     if (availPoints <= 0 || [...given, ...added].length === letterNum) {
         pointsWorth.style.display = 'none';
         gameOver = true;
