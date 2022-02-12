@@ -1,7 +1,7 @@
 {
     "start_url": "/",
-    "name": "WordAround",
-    "short_name": "WordAround - a circular word game",
+    "name": "WordAround - a circular word game",
+    "short_name": "WordAround",
     "description": "A vocabulary and word guessing game with a circular twist",
     "display": "standalone",
     "orientation": "portrait",
