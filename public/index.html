@@ -5,21 +5,24 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <meta name="description" content="A vocabulary and word guessing game with a circular twist"/>
+        <meta name="theme-color" content="slateblue"/>
         <link rel="stylesheet" href="./styles.css" />
         <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
         <link rel="icon" href="./favicon.ico" type="image/x-icon" />
         
         <link rel="manifest" href="./manifest.webmanifest" />
+        <link rel="apple-touch-icon" href="./wordaround192.png"/>
         <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="preload" onload="this.onload = null; this.rel = 'stylesheet';" as="style"
+            href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap"
         />
-        <script>
+        <script defer>
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('sw.js');
             }
         </script>
-        <script src="./index.js"></script>
+        <script src="./index.js" defer></script>
         <title>WordAround - a circular word game</title>
     </head>
     <body onload="load()">
@@ -87,7 +90,7 @@
         </settings-content>
         <game-content style="display: flex;">
             <div><p class="points-worth" style="text-align: center;"></p>
-            <div id="mobile-input" oninput="mobileInput(event);" spellcheck="false"><input></input></div></div>
+            <div id="mobile-input" oninput="mobileInput(event);" spellcheck="false"><label for="mobile-inp">Input Here</label><input id="mobile-inp"></input></div></div>
             <div class="word-container">
                 <div class="go-btn">
                     <span class="guess-text">GUESS</span>
