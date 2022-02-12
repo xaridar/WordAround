@@ -8,6 +8,7 @@ app.use((req, res, next) => {
         req.get('x-forwarded-proto') !== 'https' &&
         process.env.NODE_ENV === 'production'
     ) {
+        console.log(req.hostname);
         return res.redirect(`https://${req.hostname}${req.url}`);
     }
 });
