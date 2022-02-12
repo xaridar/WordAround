@@ -5,19 +5,24 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-        <meta name="description" content="A vocabulary and word guessing game with a circular twist"/>
-        <meta name="theme-color" content="slateblue"/>
+        <meta
+            name="description"
+            content="A vocabulary and word guessing game with a circular twist"
+        />
+        <meta name="theme-color" content="slateblue" />
         <link rel="stylesheet" href="./styles.css" />
         <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
         <link rel="icon" href="./favicon.ico" type="image/x-icon" />
-        
+
         <link rel="manifest" href="./manifest.webmanifest" />
-        <link rel="apple-touch-icon" href="./wordaround192.png"/>
+        <link rel="apple-touch-icon" href="./wordaround192.png" />
         <link
-            rel="preload" onload="this.onload = null; this.rel = 'stylesheet';" as="style"
+            rel="preload"
+            onload="this.onload = null; this.rel = 'stylesheet';"
+            as="style"
             href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap"
         />
-        <script defer>
+        <script>
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('sw.js');
             }
@@ -31,7 +36,7 @@
             <h1 id="title">WordAround</h1>
             <div id="settings" class="material-icons btn">settings</div>
         </header>
-        <info-content style="display: none;">
+        <info-content style="display: none">
             <h3>Welcome to WordAround!</h3>
             <p>
                 To play, just type some letters - they'll display in the circle.
@@ -53,9 +58,11 @@
             <p>
                 If you guessed correctly, you will earn points and a new word
                 will fill in. Otherwise, every letter in the same position of
-                the word you guessed and the target word will stay filled in. 
-                Every correct letter placed in the incorrect position on the circle will be marked in
-                <span style="color: rgb(0, 139, 141);">teal</span> on the circle below.
+                the word you guessed and the target word will stay filled in.
+                Every correct letter placed in the incorrect position on the
+                circle will be marked in
+                <span style="color: rgb(0, 139, 141)">teal</span> on the circle
+                below.
             </p>
             <p>
                 If you guess every letter incorrectly, the available points for
@@ -63,7 +70,7 @@
             </p>
             <p>If you run out of points on a word, the game is over.</p>
         </info-content>
-        <settings-content style="display: none;">
+        <settings-content style="display: none">
             <div>
                 Dark Mode
                 <label class="switch">
@@ -88,9 +95,18 @@
                 7 Letters
             </div>
         </settings-content>
-        <game-content style="display: flex;">
-            <div><p class="points-worth" style="text-align: center;"></p>
-            <div id="mobile-input" oninput="mobileInput(event);" spellcheck="false"><label for="mobile-inp">Input Here</label><input id="mobile-inp"></input></div></div>
+        <game-content style="display: flex">
+            <div>
+                <p class="points-worth" style="text-align: center"></p>
+                <div
+                    id="mobile-input"
+                    oninput="mobileInput(event);"
+                    spellcheck="false"
+                >
+                    <label for="mobile-inp">Input Here</label
+                    ><input id="mobile-inp" />
+                </div>
+            </div>
             <div class="word-container">
                 <div class="go-btn">
                     <span class="guess-text">GUESS</span>
