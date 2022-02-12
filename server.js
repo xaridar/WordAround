@@ -9,6 +9,7 @@ app.use((req, res, next) => {
         process.env.NODE_ENV === 'production'
     ) {
         console.log(req.hostname);
+        next();
         // return res.redirect(`https://${req.hostname}${req.url}`);
     }
 });
