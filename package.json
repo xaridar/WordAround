@@ -1,0 +1,16 @@
+{
+    "name": "wordaround",
+    "version": "2.0.0",
+    "description": "A vocabulary and word guessing game with a circular twist",
+    "main": "server.js",
+    "scripts": {
+        "start": "nodemon .",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Elliot Topper",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.17.2",
+        "nodemon": "^2.0.15"
+    }
+}
