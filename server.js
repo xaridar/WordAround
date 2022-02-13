@@ -2,8 +2,11 @@ const express = require('express');
 const compression = require('compression');
 
 const app = express();
+require('dotenv').config();
 
 app.use(compression());
+
+console.log(process.env);
 
 app.use((req, res, next) => {
     if (

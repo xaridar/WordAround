@@ -355,11 +355,20 @@ const newLetter = (word, given, currGuess, nextNotGiven, wrongPos) => {
         //     }
     }
     let wordCopy = word.slice();
+    for (letter of given) {
+        wordCopy = wordCopy.replace(word[letter], ' ');
+    }
+    for (letter of added) {
+        wordCopy = wordCopy.replace(word[letter], ' ');
+    }
+    wordCopy = wordCopy
+        .split('')
+        .filter((letter) => letter !== ' ')
+        .join('');
     wrongPos = [
         ...currGuess
             .map((el, i) => ({ val: el, idx: i }))
             .filter((el) => {
-                console.log(el.val);
                 const includes = wordCopy.includes(el.val);
                 wordCopy = wordCopy.replace(el.val, '');
                 return (
