@@ -72,7 +72,7 @@ const initializeUI = () => {
         letter.className = 'letter';
         const p = document.createElement('p');
         const observer = new MutationObserver((list, obs) => {
-            p.style.animation = 'letter-change .5s cubic-bezier(.57,.23,.5,2)';
+            // p.style.animation = 'letter-change .5s cubic-bezier(.57,.23,.5,2)';
             setTimeout(() => (p.style.animation = ''), 500);
         });
         observer.observe(p, { childList: true });

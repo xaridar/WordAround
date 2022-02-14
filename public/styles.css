@@ -200,7 +200,7 @@ settings-content > * {
     transform-origin: 0% 100%;
     border: 1px solid black;
     background-color: slateblue;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.5s ease;
 }
 
 .letter-container.partial {
