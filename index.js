@@ -503,10 +503,13 @@ const mobileInput = (e) => {
     if (!acceptLetters) return;
     switch (e.inputType) {
         case 'deleteContentBackward':
-            if (getNextNotGiven(nextNotGiven, given, true) === undefined)
-                return;
-            currGuess[getNextNotGiven(nextNotGiven, given, true)] = '';
-            letterSpaces[getNextNotGiven(nextNotGiven, given, true)]
+            let delNum = getNextNotGiven(nextNotGiven, given, true);
+            if (currGuess[nextNotGiven]) {
+                delNum = nextNotGiven;
+            }
+            if (delNum === undefined) return;
+            currGuess[delNum] = '';
+            letterSpaces[delNum]
                 .querySelector('.letter')
                 .querySelector('p').textContent = '';
             nextNotGiven = getNextNotGiven(nextNotGiven, given, true);
