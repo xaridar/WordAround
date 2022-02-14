@@ -1,8 +1,11 @@
 const express = require('express');
 const compression = require('compression');
+const morga = require('morgan');
 
 const app = express();
 require('dotenv').config();
+
+app.use(morgan('tiny'));
 
 app.use(compression());
 
