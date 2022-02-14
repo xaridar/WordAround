@@ -71,6 +71,11 @@ const initializeUI = () => {
         const letter = document.createElement('div');
         letter.className = 'letter';
         const p = document.createElement('p');
+        const observer = new MutationObserver((list, obs) => {
+            p.style.animation = 'letter-change .5s cubic-bezier(.57,.23,.5,2)';
+            setTimeout(() => (p.style.animation = ''), 500);
+        });
+        observer.observe(p, { childList: true });
         letter.appendChild(p);
         letterContainer.appendChild(letter);
         letterContainer.addEventListener('click', () => {
@@ -125,9 +130,12 @@ const setTurnLetters = () => {
     Array.prototype.slice
         .call(document.querySelectorAll('.letter'))
         .forEach((space, i) => {
-            space.querySelector('.letter > p').style.transform = `rotate(${
-                !rotate ? (-1 * (360 * i)) / letterNum - 30 + 'deg' : '0deg'
-            })`;
+            space.querySelector('.letter > p').style.transform = !rotate
+                ? `rotate(${(-1 * (360 * i)) / letterNum - 30 + 'deg'})`
+                : '' +
+                  space
+                      .querySelector('.letter > p')
+                      .style.transform.replace(/rotate\(.*\)/, '');
         });
 };
 
