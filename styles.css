@@ -283,9 +283,6 @@ settings-content > * {
     75% {
         color: green;
     }
-    100% {
-        color: initial;
-    }
 }
 
 @keyframes points-incorrect {
@@ -294,9 +291,6 @@ settings-content > * {
     }
     75% {
         color: red;
-    }
-    100% {
-        color: initial;
     }
 }
 
