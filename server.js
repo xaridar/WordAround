@@ -1,6 +1,6 @@
 const express = require('express');
 const compression = require('compression');
-const morga = require('morgan');
+const morgan = require('morgan');
 
 const app = express();
 require('dotenv').config();
