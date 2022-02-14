@@ -11,6 +11,7 @@ let given = [],
     wrongPos = [];
 let nextNotGiven = -1;
 let currGuess = [];
+let rotate = true;
 
 let wordStartPoint = 0;
 
@@ -118,13 +119,16 @@ const setLetters = (firstLoad = true) => {
 
 const setTurnLetters = () => {
     const setLetters = localStorage.getItem('rotateLetters');
-    const rotate = setLetters === 'false' ? false : true;
-    document.querySelector('#rotateletters').checked = rotate;
-    letterSpaces.forEach((space, i) => {
-        space.querySelector('.letter > p').style.transform = `rotate(${
-            !rotate ? (-1 * (360 * i)) / letterNum - 30 + 'deg' : '0deg'
-        })`;
-    });
+    const rot = setLetters === 'false' ? false : true;
+    document.querySelector('#rotateletters').checked = rot;
+    rotate = rot;
+    Array.prototype.slice
+        .call(document.querySelectorAll('.letter'))
+        .forEach((space, i) => {
+            space.querySelector('.letter > p').style.transform = `rotate(${
+                !rotate ? (-1 * (360 * i)) / letterNum - 30 + 'deg' : '0deg'
+            })`;
+        });
 };
 
 const createWordList = async () => {
@@ -449,6 +453,9 @@ const newLetter = (word, given, currGuess, nextNotGiven, wrongPos) => {
         p.textContent = oldGuess[i];
         if ('pdbqnuwm'.includes(oldGuess[i])) p.classList.add('underline');
         letter.appendChild(p);
+        p.style.transform = `rotate(${
+            !rotate ? (-1 * (360 * i)) / letterNum - 30 + 'deg' : '0deg'
+        })`;
         letterContainer.appendChild(letter);
         container.appendChild(letterContainer);
     }
