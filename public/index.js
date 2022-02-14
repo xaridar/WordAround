@@ -208,12 +208,10 @@ const playGame = (lastWord = '') => {
                 }, 1000);
             } else {
                 if (
-                    currGuess.some((letter, i) => {
+                    !currGuess.some((letter, i) => {
                         return !given.includes(i) && word[i] === letter;
                     })
                 ) {
-                    totalPoints.style.animation = 'points-correct 1s';
-                } else {
                     totalPoints.style.animation = 'points-incorrect 1s';
                 }
                 guessBtn.classList.remove('enabled');
@@ -346,17 +344,7 @@ const newLetter = (word, given, currGuess, nextNotGiven, wrongPos) => {
             )
             .map(({ idx }) => idx),
     ];
-    if (!added.length) {
-        availPoints--;
-        //     if (given.length < word.length - 1 || availPoints <= 0) {
-        //         const shuffledPool = Array.from(Array(letterNum).keys())
-        //             .filter((i) => !given.includes(i))
-        //             .map((val) => ({ val, sort: Math.random() }))
-        //             .sort((a, b) => a.sort - b.sort)
-        //             .map(({ val }) => val);
-        //         added.push(shuffledPool[0]);
-        //     }
-    }
+    availPoints--;
     let wordCopy = word.slice();
     for (letter of given) {
         wordCopy = wordCopy.replace(word[letter], ' ');
