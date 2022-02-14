@@ -49,6 +49,7 @@ const load = async () => {
     letterSpaces = Array.prototype.slice
         .call(document.querySelectorAll('[id ^= "letter-"]'))
         .sort((a, b) => a.id.slice(-1) - b.id.slice(-1));
+    setTurnLetters();
     guessBtn = document.querySelector('.go-btn');
     pointsWorth = document.querySelector('.points-worth');
     totalPoints = document.querySelector('#score');
@@ -106,12 +107,23 @@ const setDarkMode = () => {
 
 const setLetters = (firstLoad = true) => {
     const lettersStr = localStorage.getItem('numLetters');
-    let letters = +lettersStr || 6;
+    const letters = +lettersStr || 6;
     const oldNum = letterNum;
     letterNum = letters;
     document.querySelector('#letternum').checked = letterNum === 7;
     createWordList().then(() => {
         if (!firstLoad && oldNum !== letterNum) window.location.reload();
+    });
+};
+
+const setTurnLetters = () => {
+    const setLetters = localStorage.getItem('rotateLetters');
+    const rotate = setLetters === 'false' ? false : true;
+    document.querySelector('#rotateletters').checked = rotate;
+    letterSpaces.forEach((space, i) => {
+        space.querySelector('.letter > p').style.transform = `rotate(${
+            !rotate ? (-1 * (360 * i)) / letterNum - 30 + 'deg' : '0deg'
+        })`;
     });
 };
 
@@ -160,8 +172,11 @@ const playGame = (lastWord = '') => {
     );
     nextNotGiven = getNextNotGiven(-1, given);
     letterSpaces.forEach((space, i) => {
-        space.querySelector('.letter').querySelector('p').textContent =
-            given.includes(i) ? word[i] : '';
+        const p = space.querySelector('.letter > p');
+        p.textContent = given.includes(i) ? word[i] : '';
+        if (given.includes(i) && 'pdbqnuwm'.includes(word[i]))
+            p.classList.add('underline');
+        else p.classList.remove('underline');
         space.classList.remove('active');
         space.classList.remove('first');
         space.classList.remove('preset');
@@ -194,7 +209,7 @@ const playGame = (lastWord = '') => {
             }
             if (currGuess.join('') === word) {
                 points += availPoints;
-                totalPoints.style.animation = 'points-correct 1s';
+                totalPoints.style.animation = 'points-correct 2s';
                 totalPoints.textContent = points;
                 guessBtn.classList.remove('enabled');
                 guessBtn.removeEventListener('click', guessListener);
@@ -203,9 +218,18 @@ const playGame = (lastWord = '') => {
                 document
                     .querySelector('#copy')
                     .removeEventListener('click', copyListener);
+                letterSpaces.forEach((space, i) => {
+                    space.classList.add('preset');
+                    const p = space.querySelector('.letter > p');
+                    p.textContent = currGuess[i];
+                    if ('pdbqnuwm'.includes(currGuess[i]))
+                        p.classList.add('underline');
+                    else p.classList.remove('underline');
+                });
                 setTimeout(() => {
+                    totalPoints.style.animation = '';
                     playGame(word);
-                }, 1000);
+                }, 2000);
             } else {
                 if (
                     !currGuess.some((letter, i) => {
@@ -216,6 +240,25 @@ const playGame = (lastWord = '') => {
                 }
                 guessBtn.classList.remove('enabled');
                 acceptLetters = false;
+                letterSpaces[nextNotGiven].classList.remove('active');
+                let tempWord = word.slice();
+                for (let i = 0; i < currGuess.length; i++) {
+                    if (word[i] === currGuess[i])
+                        tempWord = tempWord.replace(word[i], ' ');
+                }
+                tempWord = tempWord
+                    .split('')
+                    .filter((letter) => letter !== ' ')
+                    .join('');
+                letterSpaces.forEach((space, i) => {
+                    if (word[i] === currGuess[i]) {
+                        space.classList.add('preset');
+                    }
+                    if (tempWord.includes(currGuess[i])) {
+                        tempWord = tempWord.replace(currGuess[i], '');
+                        space.classList.add('partial');
+                    }
+                });
                 setTimeout(() => {
                     totalPoints.style.animation = '';
                     nextNotGiven = newLetter(
@@ -267,9 +310,11 @@ const playGame = (lastWord = '') => {
                 }
                 if (delNum === undefined) return;
                 currGuess[delNum] = '';
-                letterSpaces[delNum]
+                const p = letterSpaces[delNum]
                     .querySelector('.letter')
-                    .querySelector('p').textContent = '';
+                    .querySelector('p');
+                p.textContent = '';
+                p.classList.remove('underline');
                 nextNotGiven = getNextNotGiven(nextNotGiven, given, true);
                 letterSpaces.forEach((space) =>
                     space.classList.remove('active')
@@ -289,10 +334,18 @@ const playGame = (lastWord = '') => {
                     'abcdefghijklmnopqrstuvwxyz'.includes(k.key.toLowerCase())
                 ) {
                     currGuess[nextNotGiven] = k.key.toLowerCase();
-                    if (letterSpaces[nextNotGiven].querySelector('.letter > p'))
-                        letterSpaces[nextNotGiven].querySelector(
-                            '.letter > p'
-                        ).textContent = k.key.toLowerCase();
+                    if (
+                        letterSpaces[nextNotGiven].querySelector('.letter > p')
+                    ) {
+                        const p =
+                            letterSpaces[nextNotGiven].querySelector(
+                                '.letter > p'
+                            );
+                        p.textContent = k.key.toLowerCase();
+                        if ('pdbqnuwm'.includes(k.key.toLowerCase()))
+                            p.classList.add('underline');
+                        else p.classList.remove('underline');
+                    }
                     nextNotGiven = getNextNotGiven(nextNotGiven, given);
                     if (nextNotGiven === -1) nextNotGiven = undefined;
                     letterSpaces.forEach((space) =>
@@ -333,6 +386,9 @@ const playGame = (lastWord = '') => {
 
 const newLetter = (word, given, currGuess, nextNotGiven, wrongPos) => {
     guessBtn.classList.remove('enabled');
+    letterSpaces.forEach((space) => {
+        space.classList.remove('partial');
+    });
     const oldGiven = [...given];
     const oldGuess = [...currGuess];
 
@@ -381,7 +437,6 @@ const newLetter = (word, given, currGuess, nextNotGiven, wrongPos) => {
         letterContainer.className = 'letter-container small';
         if (word[i] === oldGuess[i]) letterContainer.classList.add('preset');
         else if (wrongPos.includes(i)) letterContainer.classList.add('partial');
-        letterContainer.id = 'letter-' + i;
         letterContainer.style.transform = `rotate(${
             (360 * i) / letterNum
         }deg) skewY(${-90 + 360 / letterNum}deg)`;
@@ -392,6 +447,7 @@ const newLetter = (word, given, currGuess, nextNotGiven, wrongPos) => {
             180 / letterNum
         }deg)`;
         p.textContent = oldGuess[i];
+        if ('pdbqnuwm'.includes(oldGuess[i])) p.classList.add('underline');
         letter.appendChild(p);
         letterContainer.appendChild(letter);
         container.appendChild(letterContainer);
@@ -404,9 +460,12 @@ const newLetter = (word, given, currGuess, nextNotGiven, wrongPos) => {
         guessBtn.querySelector('.guess-text').textContent = 'Play Again?';
         guessBtn.classList.add('enabled');
         letterSpaces.forEach((space, i) => {
-            space.classList.add('preset');
             if (i === wordStartPoint) space.classList.add('first');
-            space.querySelector('.letter > p').textContent = word[i];
+            else space.classList.add('preset');
+            const p = space.querySelector('.letter > p');
+            p.textContent = word[i];
+            if ('pdbqnuwm'.includes(word[i])) p.classList.add('underline');
+            else p.classList.remove('underline');
         });
         currGuess.length = 0;
         currGuess.push(...word.split(''));
@@ -416,9 +475,12 @@ const newLetter = (word, given, currGuess, nextNotGiven, wrongPos) => {
     given.push(...added);
     given.forEach((added) => {
         currGuess[added] = word.charAt(added);
-        letterSpaces[added]
+        const p = letterSpaces[added]
             .querySelector('.letter')
-            .querySelector('p').textContent = word.charAt(added);
+            .querySelector('p');
+        p.textContent = word[added];
+        if ('pdbqnuwm'.includes(word[added])) p.classList.add('underline');
+        else p.classList.remove('underline');
         letterSpaces[added].classList.add('preset');
     });
     letterSpaces.forEach((space) => {
@@ -426,7 +488,9 @@ const newLetter = (word, given, currGuess, nextNotGiven, wrongPos) => {
     });
     letterSpaces.forEach((letter, i) => {
         if (given.includes(i)) return;
-        letter.querySelector('.letter > p').textContent = '';
+        const p = letter.querySelector('.letter > p');
+        p.textContent = '';
+        p.classList.remove('underline');
         currGuess[i] = '';
     });
     nextNotGiven = !given.includes(nextNotGiven)
@@ -483,6 +547,12 @@ const toggleLetters = (e) => {
     setLetters(false);
 };
 
+const toggleRotate = (e) => {
+    const rotate = e.target.checked;
+    localStorage.setItem('rotateLetters', rotate);
+    setTurnLetters();
+};
+
 const mobileInput = (e) => {
     e.preventDefault();
     e.target.value =
@@ -497,9 +567,11 @@ const mobileInput = (e) => {
             }
             if (delNum === undefined) return;
             currGuess[delNum] = '';
-            letterSpaces[delNum]
+            const p = letterSpaces[delNum]
                 .querySelector('.letter')
-                .querySelector('p').textContent = '';
+                .querySelector('p');
+            p.textContent = '';
+            p.classList.remove('underline');
             nextNotGiven = getNextNotGiven(nextNotGiven, given, true);
             letterSpaces.forEach((space) => space.classList.remove('active'));
             letterSpaces[nextNotGiven]?.classList.add('active');
@@ -516,10 +588,13 @@ const mobileInput = (e) => {
         case 'insertText':
             if ('abcdefghijklmnopqrstuvwxyz'.includes(data)) {
                 currGuess[nextNotGiven] = data;
-                if (letterSpaces[nextNotGiven].querySelector('.letter > p'))
-                    letterSpaces[nextNotGiven].querySelector(
-                        '.letter > p'
-                    ).textContent = data;
+                if (letterSpaces[nextNotGiven].querySelector('.letter > p')) {
+                    const p =
+                        letterSpaces[nextNotGiven].querySelector('.letter > p');
+                    p.textContent = data;
+                    if ('pdbqnuwm'.includes(data)) p.classList.add('underline');
+                    else p.classList.remove('underline');
+                }
                 nextNotGiven = getNextNotGiven(nextNotGiven, given);
                 if (nextNotGiven === -1) nextNotGiven = undefined;
                 letterSpaces.forEach((space) =>
