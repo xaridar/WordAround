@@ -160,6 +160,11 @@ const moveStart = (word) => {
 
 const playGame = (lastWord = '') => {
     guesses.innerHTML = '';
+    letterSpaces.forEach((space, i) => {
+        const p = space.querySelector('.letter > p');
+        p.textContent = '';
+        p.classList.remove('underline');
+    });
     acceptLetters = true;
     gameOver = false;
     if (!lastWord) {
