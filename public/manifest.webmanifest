@@ -28,7 +28,7 @@
             "type": "image/png"
         },
         {
-            "src": "wordaround-maskable.png",
+            "src": "wordaround_maskable.png",
             "type": "image/png",
             "sizes": "192x192",
             "purpose": "maskable"

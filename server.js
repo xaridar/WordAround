@@ -9,8 +9,6 @@ app.use(morgan('tiny'));
 
 app.use(compression());
 
-console.log(process.env);
-
 app.use((req, res, next) => {
     if (
         !req.secure &&
