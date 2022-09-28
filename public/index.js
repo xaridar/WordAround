@@ -99,11 +99,11 @@ const initializeUI = () => {
 };
 
 const setDarkMode = () => {
-    const darkModeStr = localStorage.getItem('darkMode');
+    const darkModeStr = localStorage.getItem('wa-darkMode');
     let darkMode =
         darkModeStr === 'true' ? true : darkModeStr === 'false' ? false : null;
     if (darkMode === null) {
-        localStorage.setItem('darkMode', true);
+        localStorage.setItem('wa-darkMode', true);
         darkMode = true;
     }
     if (darkMode) document.body.classList.add('dark');
@@ -557,7 +557,7 @@ const findLastNotGiven = (lastNum, given) => {
 
 const toggleDarkMode = (e) => {
     const darkMode = e.target.checked;
-    localStorage.setItem('darkMode', darkMode);
+    localStorage.setItem('wa-darkMode', darkMode);
     setDarkMode();
 };
 
