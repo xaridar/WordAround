@@ -25,4 +25,4 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       - name: Subtree push
-        run: git subtree push --prefix public origin gh-pages
+        run: git pull & git subtree push --prefix public origin gh-pages
