@@ -41,7 +41,7 @@ jobs:
         with:
           repo: xaridar/WordAround
           # github token in setting
-          repo_token: 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
+          repo_token: ${{ secrets.REPO_TOKEN }}
           # Path prefix in parent repo to split into child subtree (eg. src/PackageName.)
           path: public
           # Branch of child subtree repository (default is branch or tag ref that triggered the workflow.)
