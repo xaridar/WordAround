@@ -245,6 +245,9 @@ const playGame = (lastWord = '') => {
                 });
                 setTimeout(() => {
                     totalPoints.style.animation = '';
+                    letterSpaces.forEach((space, i) => {
+                        if (i === wordStartPoint) space.classList.add('first');
+                    });
                     playGame(word);
                 }, 2000);
             } else {
